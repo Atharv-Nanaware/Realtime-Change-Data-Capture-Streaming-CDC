@@ -1,4 +1,4 @@
-# **Realtime-Change-Data-Capture-Streaming-CDC**
+# **SlackSync: Real-Time Data Integration**
 
 ## **Overview**
 

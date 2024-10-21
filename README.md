@@ -51,7 +51,9 @@ This project utilizes the following services defined in the Docker Compose file 
    Ensure you have this Docker Compose file in your local system. If it's part of a repository, clone the repository to your local machine.
 
 
+
     git clone https://github.com/Atharv-Nanaware/Realtime-Change-Data-Capture-Streaming-CDC
+
     cd Realtime-Change-Data-Capture-Streaming-CDC
 
 2. **Navigate to the Directory:**

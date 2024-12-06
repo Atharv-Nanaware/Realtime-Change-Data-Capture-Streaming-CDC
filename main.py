@@ -1,31 +1,29 @@
 import faker
 import psycopg2
-from datetime import datetime
 import random
+from datetime import datetime, timedelta
 
-fake= faker.Faker()
+fake=faker.Faker()
+
 
 def generate_transaction():
-    user=fake.simple_profile()
+    user = fake.simple_profile()
 
     return {
-        "transactionId" : fake.uuid4(),
-        "userId":user['username'],
+        "transactionId": fake.uuid4(),
+        "userId": user['username'],
         "timestamp": datetime.utcnow().timestamp(),
-        "amount": round(random.uniform(10,1000),2),
-        "currency": random.choice(['USD',"GBP"]),
-        "city":fake.city(),
-        "country":fake.country(),
-        "merchantName":fake.company(),
+        "amount": round(random.uniform(10, 1000), 2),
+        "currency": random.choice(['USD', 'GBP']),
+        'city': fake.city(),
+        "country": fake.country(),
+        "merchantName": fake.company(),
         "paymentMethod": random.choice(['credit_card', 'debit_card', 'online_transfer']),
-        "ipAddress":random.choice(['', 'DISCOUNT10', '']),
-        "affiliateId":fake.uuid4(),
-        "voucher_code": fake.word()  #  this line  added to generate a voucher code
+        "ipAddress": fake.ipv4(),
+        "voucherCode": random.choice(['', 'DISCOUNT10', '']),
+        'affiliateId': fake.uuid4()
     }
-
-
-
-
+    
 def create_table(conn):
     cursor = conn.cursor()
 
@@ -49,7 +47,8 @@ def create_table(conn):
 
     cursor.close()
     conn.commit()
-
+ 
+ 
 if __name__ == "__main__":
     conn = psycopg2.connect(
         host='localhost',
@@ -58,13 +57,13 @@ if __name__ == "__main__":
         password='postgres',
         port=5432
     )
-
+    
     create_table(conn)
 
     transaction = generate_transaction()
     cur = conn.cursor()
     print(transaction)
-
+    # This is Our Insertion
     cur.execute(
         """
         INSERT INTO transactions(transaction_id, user_id, timestamp, amount, currency, city, country, merchant_name, payment_method, 
@@ -73,7 +72,7 @@ if __name__ == "__main__":
         """, (transaction["transactionId"], transaction["userId"], datetime.fromtimestamp(transaction["timestamp"]).strftime('%Y-%m-%d %H:%M:%S'),
               transaction["amount"], transaction["currency"], transaction["city"], transaction["country"],
               transaction["merchantName"], transaction["paymentMethod"], transaction["ipAddress"],
-              transaction["affiliateId"], transaction["voucher_code"])
+              transaction["affiliateId"], transaction["voucherCode"])
     )
 
     cur.close()
